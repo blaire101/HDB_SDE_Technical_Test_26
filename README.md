@@ -8,21 +8,50 @@
 ### Part 1 processing flow
 
 ```mermaid
-flowchart LR
-    B[Programmatic extraction] --> C[Schema union and period filter]
-    C --> D[Data profiling]
-    D --> E[Validation and standardisation]
-    E --> F[Remaining lease recomputation]
-    F --> G[Composite-key deduplication]
-    G --> H[Price anomaly flagging]
-    H --> I[Cleaned]
-    I --> J[Resale Identifier]
-    J --> K[Transformed]
-    J --> L[SHA-256]
-    L --> M[Hashed]
-    E --> N[Failed]
-    G --> N
-    H --> O[Review]
+flowchart TD
+    A[Programmatic Extraction]
+    B[Schema Union and Period Filter]
+    C[Data Profiling]
+    D[Validation and Standardisation]
+    E[Remaining Lease Recalculation]
+    F[Composite-Key Deduplication]
+    G[Price Anomaly Detection]
+    H[Cleaned Dataset]
+    I[Generate Resale Identifier]
+    J[Transformed Dataset]
+    K[SHA-256 Hashing]
+    L[Hashed Dataset]
+
+    X[Failed Records]
+    Y[Anomaly Review Dataset]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    I --> K
+    K --> L
+
+    D -. Invalid records .-> X
+    F -. Lower-price duplicates .-> X
+    G -. Flagged for review .-> Y
+
+    classDef extract fill:#E8F1FF,stroke:#2563EB,stroke-width:2px,color:#0F172A;
+    classDef quality fill:#FFF7E6,stroke:#D97706,stroke-width:2px,color:#0F172A;
+    classDef output fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#0F172A;
+    classDef failed fill:#FEF2F2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D;
+    classDef review fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#4C1D95;
+
+    class A,B,C extract;
+    class D,E,F,G quality;
+    class H,I,J,K,L output;
+    class X failed;
+    class Y review;
 ```
 
 ### Part 1 module structure
@@ -60,7 +89,7 @@ PYTHONPATH=src python -m hdb_pipeline.main \
 Run the automated tests:
 
 ```bash
-pytest -q
+PYTHONPATH=src pytest -q
 ```
 
 
