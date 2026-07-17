@@ -9,46 +9,47 @@
 
 ```mermaid
 flowchart TD
-    A[Read Source Files]
-    B[Combine Files and Keep 2012-2016 Records]
-    C[Check Data Structure and Values]
-    D[Validate Required Fields]
-    E[Recalculate Remaining Lease]
-    F[Remove Duplicate Transactions]
-    G[Identify Unusual Resale Prices]
-    H[Create Cleaned Dataset]
-    I[Create Resale Identifier]
-    J[Create Transformed Dataset]
-    K[Hash Resale Identifier with SHA-256]
-    L[Create Hashed Dataset]
+    subgraph P1[1. Ingest and Prepare]
+        A[Read Source Files]
+        B[Combine and Filter Records]
+        C[Profile Data Quality]
+        A --> B --> C
+    end
 
-    X[Invalid and Duplicate Records]
-    Y[Price Records for Manual Review]
+    subgraph P2[2. Clean and Validate]
+        D[Validate Required Fields]
+        E[Recalculate Remaining Lease]
+        F[Remove Duplicate Transactions]
+        G[Flag Unusual Prices]
+        D --> E --> F --> G
+    end
 
-    A --> B
-    B --> C
+    subgraph P3[3. Create Outputs]
+        H[Cleaned Dataset]
+        I[Create Resale Identifier]
+        J[Transformed Dataset]
+        K[Apply SHA-256 Hash]
+        L[Hashed Dataset]
+        H --> I
+        I --> J
+        I --> K --> L
+    end
+
     C --> D
-    D --> E
-    E --> F
-    F --> G
     G --> H
-    H --> I
-    I --> J
-    I --> K
-    K --> L
 
-    D -. Invalid records .-> X
-    F -. Lower-price duplicates .-> X
-    G -. Unusual prices .-> Y
+    D -. Invalid records .-> X[Failed Dataset]
+    F -. Duplicate records .-> X
+    G -. Price anomalies .-> Y[Review Dataset]
 
-    classDef input fill:#EAF2FF,stroke:#2563EB,stroke-width:2px,color:#111827;
-    classDef check fill:#FFF4E5,stroke:#D97706,stroke-width:2px,color:#111827;
+    classDef ingest fill:#EAF2FF,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef quality fill:#FFF4E5,stroke:#D97706,stroke-width:2px,color:#111827;
     classDef output fill:#ECFDF3,stroke:#059669,stroke-width:2px,color:#111827;
     classDef failed fill:#FEECEC,stroke:#DC2626,stroke-width:2px,color:#7F1D1D;
     classDef review fill:#F3EFFE,stroke:#7C3AED,stroke-width:2px,color:#4C1D95;
 
-    class A,B,C input;
-    class D,E,F,G check;
+    class A,B,C ingest;
+    class D,E,F,G quality;
     class H,I,J,K,L output;
     class X failed;
     class Y review;
