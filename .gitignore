@@ -1,3 +1,64 @@
+# macOS and editor files
+.DS_Store
+.AppleDouble
+.LSOverride
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Virtual environments and local environment files
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+tmp/
+
+# Assessment brief: never publish the supplied test document
+Data Engineering Technical Test 1.pdf
+*Technical Test*.pdf
+*technical_test*.pdf
+assessment*.pdf
+
+# Optional local copies and extraction directories
+Icon-package_*.zip
+aws-icons/
+extracted_input/
+
+# Keep the reproducible input archive and required generated outputs tracked.
+!data/input/ResaleFlatPrices.zip
+!output/
+!output/**
+
+# Personal bilingual study material: included in the downloadable ZIP only
+local_study/
+HDB_Technical_Test*.html
+*Bilingual*Study*.html
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
