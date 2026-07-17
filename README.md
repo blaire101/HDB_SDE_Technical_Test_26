@@ -1,4 +1,4 @@
-# HDB Senior Data Engineer Technical Test
+# HDB SDE Technical Test
 
 - Part 1: Python ETL pipeline
 - Part 2: AWS architecture design
