@@ -18,6 +18,6 @@ class PipelineConfig:
 
     # Treat a category appearing fewer than 5 times.
     minimum_category_frequency: int = 5
-    
+
     # Reference date used to calculate the remaining lease.
     as_of_date: date = date.today()
