@@ -9,21 +9,21 @@
 
 ```mermaid
 flowchart TD
-    A[Programmatic Extraction]
-    B[Schema Union and Period Filter]
-    C[Data Profiling]
-    D[Validation and Standardisation]
-    E[Remaining Lease Recalculation]
-    F[Composite-Key Deduplication]
-    G[Price Anomaly Detection]
-    H[Cleaned Dataset]
-    I[Generate Resale Identifier]
-    J[Transformed Dataset]
-    K[SHA-256 Hashing]
-    L[Hashed Dataset]
+    A[Read Source Files]
+    B[Combine Files and Keep 2012-2016 Records]
+    C[Check Data Structure and Values]
+    D[Validate Required Fields]
+    E[Recalculate Remaining Lease]
+    F[Remove Duplicate Transactions]
+    G[Identify Unusual Resale Prices]
+    H[Create Cleaned Dataset]
+    I[Create Resale Identifier]
+    J[Create Transformed Dataset]
+    K[Hash Resale Identifier with SHA-256]
+    L[Create Hashed Dataset]
 
-    X[Failed Records]
-    Y[Anomaly Review Dataset]
+    X[Invalid and Duplicate Records]
+    Y[Price Records for Manual Review]
 
     A --> B
     B --> C
@@ -39,16 +39,16 @@ flowchart TD
 
     D -. Invalid records .-> X
     F -. Lower-price duplicates .-> X
-    G -. Flagged for review .-> Y
+    G -. Unusual prices .-> Y
 
-    classDef extract fill:#E8F1FF,stroke:#2563EB,stroke-width:2px,color:#0F172A;
-    classDef quality fill:#FFF7E6,stroke:#D97706,stroke-width:2px,color:#0F172A;
-    classDef output fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#0F172A;
-    classDef failed fill:#FEF2F2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D;
-    classDef review fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#4C1D95;
+    classDef input fill:#EAF2FF,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef check fill:#FFF4E5,stroke:#D97706,stroke-width:2px,color:#111827;
+    classDef output fill:#ECFDF3,stroke:#059669,stroke-width:2px,color:#111827;
+    classDef failed fill:#FEECEC,stroke:#DC2626,stroke-width:2px,color:#7F1D1D;
+    classDef review fill:#F3EFFE,stroke:#7C3AED,stroke-width:2px,color:#4C1D95;
 
-    class A,B,C extract;
-    class D,E,F,G quality;
+    class A,B,C input;
+    class D,E,F,G check;
     class H,I,J,K,L output;
     class X failed;
     class Y review;
