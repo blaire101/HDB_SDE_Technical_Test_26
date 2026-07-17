@@ -50,7 +50,8 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
-python -m hdb_pipeline.main \
+
+PYTHONPATH=src python -m hdb_pipeline.main \
   --input-path data/input/ResaleFlatPrices.zip \
   --output-dir output \
   --as-of-date 2026-07-17
