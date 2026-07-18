@@ -39,7 +39,11 @@ flowchart TD
 
     D -. Invalid records .-> X1[Validation Failed Dataset]
     F -. Duplicate records .-> X2[Duplicate Failed Dataset]
-    G -. Price anomalies .-> Y[Anomaly Review Dataset]
+
+    X1 --> X[Failed Dataset]
+    X2 --> X
+
+    G -. Price anomalies .-> Y[Review Dataset]
 
     classDef ingest fill:#EAF2FF,stroke:#2563EB,stroke-width:2px,color:#111827;
     classDef quality fill:#FFF4E5,stroke:#D97706,stroke-width:2px,color:#111827;
@@ -50,7 +54,7 @@ flowchart TD
     class A,B,C ingest;
     class D,E,F,G quality;
     class H,I,J,K,L output;
-    class X1,X2 failed;
+    class X1,X2,X failed;
     class Y review;
 ```
 
