@@ -10,12 +10,7 @@ from .pipeline import run_pipeline
 def main() -> None:
     """Parse command-line arguments and run the ETL pipeline."""
     parser = argparse.ArgumentParser(description="Run the HDB resale flat price ETL pipeline")
-    parser.add_argument(
-        "--input-path",
-        type=Path,
-        required=True,
-        help="ZIP archive, directory containing CSV files, or a single CSV file",
-    )
+    parser.add_argument("--input-path", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, default=Path("output"))
     parser.add_argument("--as-of-date", type=date.fromisoformat, default=date.today())
     args = parser.parse_args()
