@@ -59,7 +59,7 @@ flowchart TD
 
 ```text
 src/hdb_pipeline/
-├── main.py             # main() and command-line arguments
+├── main.py            # main() and command-line arguments
 ├── config.py          # central pipeline settings
 ├── ingestion.py       # ZIP/directory/CSV discovery, raw copy, schema union
 ├── quality.py         # profiling, validation, lease, deduplication, anomaly flags
@@ -84,7 +84,7 @@ pip install -e .
 PYTHONPATH=src python -m hdb_pipeline.main \
   --input-path data/input/ResaleFlatPrices.zip \
   --output-dir output \
-  --as-of-date 2026-07-17
+  --as-of-date 2026-07-18
 ```
 
 Run the automated tests:
