@@ -23,8 +23,7 @@ class PipelineConfig:
             potentially invalid or incorrectly encoded.
 
         anomaly_iqr_multiplier:
-            Multiplier used in the IQR (Interquartile Range) rule for detecting potential price
-            anomalies.
+            Multiplier used in the IQR (Interquartile Range) rule for detecting potential price anomalies.
 
             Lower bound = Q1 - multiplier * IQR
             Upper bound = Q3 + multiplier * IQR
