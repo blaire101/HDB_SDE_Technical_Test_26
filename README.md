@@ -3,7 +3,7 @@
 - Part 1: Python ETL pipeline
 - Part 2: AWS architecture design
 
-## Part 1 - Python ETL pipeline
+## Part 1: Developing Data Pipelines
 
 ### Part 1 processing flow
 
@@ -103,4 +103,6 @@ PYTHONPATH=src pytest -q
 ```
 
 
-## Part 2 — AWS Data Ingestion & Data Exploitation Architecture
+## Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns
+
+**AWS Data Ingestion & Data Exploitation Architecture**
