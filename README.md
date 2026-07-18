@@ -17,7 +17,7 @@ flowchart TD
     end
 
     subgraph P2[2. Clean and Validate]
-        D[Validate Required Fields]
+        D[Validate and Standardize]
         E[Recalculate Remaining Lease]
         F[Remove Duplicate Transactions]
         G[Flag Unusual Prices]
@@ -30,17 +30,16 @@ flowchart TD
         J[Transformed Dataset]
         K[Apply SHA-256 Hash]
         L[Hashed Dataset]
-        H --> I
-        I --> J
-        I --> K --> L
+
+        H --> I --> J --> K --> L
     end
 
     C --> D
     G --> H
 
-    D -. Invalid records .-> X[Failed Dataset]
-    F -. Duplicate records .-> X
-    G -. Price anomalies .-> Y[Review Dataset]
+    D -. Invalid records .-> X1[Validation Failed Dataset]
+    F -. Duplicate records .-> X2[Duplicate Failed Dataset]
+    G -. Price anomalies .-> Y[Anomaly Review Dataset]
 
     classDef ingest fill:#EAF2FF,stroke:#2563EB,stroke-width:2px,color:#111827;
     classDef quality fill:#FFF4E5,stroke:#D97706,stroke-width:2px,color:#111827;
@@ -51,7 +50,7 @@ flowchart TD
     class A,B,C ingest;
     class D,E,F,G quality;
     class H,I,J,K,L output;
-    class X failed;
+    class X1,X2 failed;
     class Y review;
 ```
 
