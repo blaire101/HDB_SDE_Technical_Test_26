@@ -62,18 +62,18 @@ flowchart TD
 
 ```text
 src/hdb_pipeline/
-├── main.py            # main() and command-line arguments
-├── config.py          # central pipeline settings
-├── ingestion.py       # ZIP/directory/CSV discovery, raw copy, schema union
-├── quality.py         # profiling, validation, lease, deduplication, anomaly flags
-├── transformation.py  # Resale Identifier and SHA-256
-├── output.py          # mandatory outputs and run manifest
-└── pipeline.py        # concise end-to-end ETL orchestration
+├── main.py             # command-line entry point
+├── config.py           # pipeline configuration
+├── ingestion.py        # source discovery, extraction and schema union
+├── data_quality.py     # profiling, validation, lease, deduplication and anomaly detection
+├── transformation.py   # Resale Identifier and SHA-256 hashing
+├── output.py           # output datasets and run manifest
+└── pipeline.py         # end-to-end ETL orchestration
 ```
 
 ### Part 1 Quick start
 
-**Environment Setup**
+#### Option 1: Conda
 
 The following commands assume that Conda is already installed.
 
@@ -82,26 +82,44 @@ conda create -n g2hdb python=3.10
 conda activate g2hdb
 ```
 
-If Conda is not available, you can use Python's built-in venv instead:
+#### Option 2: Python venv
 
-```
+Use Python's built-in virtual environment if Conda is not available.
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
 pip install -e .
+```
 
+### Run the Pipeline
+
+Run the following command from the project root:
+
+```bash
 PYTHONPATH=src python -m hdb_pipeline.main \
   --input-path data/input/ResaleFlatPrices.zip \
   --output-dir output \
   --as-of-date 2026-07-18
 ```
 
-Run the automated tests:
+### Run the Notebook
+
+```bash
+jupyter notebook notebooks/hdb_resale_pipeline.ipynb
+```
+
+### Run Tests
 
 ```bash
 PYTHONPATH=src pytest -q
 ```
-
 
 ## Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns
 
