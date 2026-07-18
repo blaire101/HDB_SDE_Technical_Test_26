@@ -1,7 +1,7 @@
 # HDB SDE Technical Test
 
-- Part 1: Python ETL pipeline
-- Part 2: AWS architecture design
+- Part 1: Developing Data Pipelines （Python ETL pipeline）
+- Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns （AWS）
 
 ## Part 1: Developing Data Pipelines
 
