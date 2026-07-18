@@ -1,0 +1,14 @@
+column,dtype,row_count,null_count,null_pct,distinct_count
+month,string,92544,0,0.0,60
+town,object,92544,0,0.0,26
+flat_type,object,92544,0,0.0,7
+block,string,92544,0,0.0,2139
+street_name,object,92544,0,0.0,522
+storey_range,object,92544,0,0.0,25
+floor_area_sqm,float64,92544,0,0.0,168
+flat_model,object,92544,0,0.0,20
+lease_commence_date,int64,92544,0,0.0,48
+remaining_lease,object,92544,55391,59.8537,50
+resale_price,float64,92544,0,0.0,2615
+source_file,object,92544,0,0.0,3
+source_row_number,int64,92544,0,0.0,55391

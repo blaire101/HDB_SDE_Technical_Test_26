@@ -1,0 +1,31 @@
+{
+  "configuration": {
+    "start_month": "2012-01",
+    "end_month": "2016-12",
+    "lease_years": 99,
+    "minimum_category_frequency": 2,
+    "anomaly_iqr_multiplier": 1.5,
+    "as_of_date": "2026-07-18"
+  },
+  "source_files": [
+    "Resale Flat Prices (Based on Approval Date), 2000 - Feb 2012.csv",
+    "Resale Flat Prices (Based on Registration Date), From Jan 2015 to Dec 2016.csv",
+    "Resale Flat Prices (Based on Registration Date), From Mar 2012 to Dec 2014.csv"
+  ],
+  "row_counts": {
+    "master": 92544,
+    "validation_failed": 1,
+    "duplicate_failed": 1595,
+    "anomaly_review": 2010,
+    "cleaned": 90948,
+    "transformed": 90948,
+    "hashed": 90948,
+    "failed_total": 1596
+  },
+  "quality_checks": {
+    "reconciled": true,
+    "anomalies_retained_in_cleaned": true,
+    "hash_cardinality_preserved": true,
+    "cleaned_has_no_duplicate_keys": true
+  }
+}

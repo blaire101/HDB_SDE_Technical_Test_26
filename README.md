@@ -73,13 +73,19 @@ src/hdb_pipeline/
 
 ### Part 1 Quick start
 
+**Environment Setup**
+
+The following commands assume that Conda is already installed.
+
 ```bash
 conda create -n g2hdb python=3.10
 conda activate g2hdb
 ```
 
+If Conda is not available, you can use Python's built-in venv instead:
+
 ```
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
