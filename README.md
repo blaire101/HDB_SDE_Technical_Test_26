@@ -124,3 +124,8 @@ PYTHONPATH=src pytest -q
 ## Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns
 
 **AWS Data Ingestion & Data Exploitation Architecture**
+
+- [Part 2 AWS Architecture and Assumptions](docs/PART2_AWS_ARCHITECTURE.md)
+- [Data Ingestion Architecture](docs/diagrams/data_ingestion_architecture.png)
+- [Data Exploitation Architecture](docs/diagrams/data_exploitation_architecture.png)
+
