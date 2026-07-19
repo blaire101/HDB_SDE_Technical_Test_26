@@ -5,7 +5,19 @@
 
 ## Part 1: Developing Data Pipelines
 
-### Part 1 processing flow
+### Part 1 Objective
+
+The pipeline is designed to:
+
+- ingest and combine the required HDB resale source files;
+- validate and standardise the data;
+- recalculate the remaining lease;
+- remove duplicate transactions;
+- flag unusual resale prices;
+- create the Resale Identifier and SHA-256 hash;
+- produce reconciled output datasets.
+
+### Part 1 Processing flow
 
 ```mermaid
 flowchart TD
@@ -58,7 +70,7 @@ flowchart TD
     class Y review;
 ```
 
-### Part 1 module structure
+### Part 1 Module structure
 
 ```text
 src/hdb_pipeline/
@@ -121,11 +133,57 @@ jupyter notebook notebooks/hdb_resale_pipeline.ipynb
 PYTHONPATH=src pytest -q
 ```
 
-## Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns
+## Part 2: Data Ingestion Architecting & Data Exploitation Architecting
 
 **AWS Data Ingestion & Data Exploitation Architecture**
 
-- [Part 2 AWS Architecture and Assumptions](docs/PART2_AWS_ARCHITECTURE.md)
+### 2.1. AWS Data Ingestion Architecture
+
+## Part 2: Data Ingestion Architecture & Data Exploitation Architecture
+
+### 2.1 AWS Data Ingestion Architecture
+
+#### 2.1.1 Objective
+
+The solution ingests batch files from the public `data.gov.sg` endpoint into Amazon S3.
+
+The design supports:
+
+- files larger than 100 MB;
+- processing within private subnets;
+- controlled outbound internet access;
+- secure storage in Amazon S3;
+- automated ETL processing and monitoring.
+
+#### 2.1.2 Processing Flow
+
+#### 2.1.3 Main Components
+
+#### 2.1.4 Network Design
+
+### 2.2 AWS Data Exploitation Architecture
+
+#### 2.2.1 Objective
+
+#### 2.2.2 Processing Flow
+
+#### 2.2.3 Main Components
+
+#### 2.2.4 Network Design
+
+### 2.3 Security, Scalability, and Performance Assumptions
+
+#### 2.3.1 Security
+
+#### 2.3.2 Scalability and Reliability
+
+#### 2.3.3 Performance
+
+#### 2.3.4 General Assumptions
+
+
+---
+
 - [Data Ingestion Architecture](docs/diagrams/data_ingestion_architecture.png)
 - [Data Exploitation Architecture](docs/diagrams/data_exploitation_architecture.png)
 
