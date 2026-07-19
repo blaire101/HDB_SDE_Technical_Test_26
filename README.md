@@ -5,7 +5,7 @@
 
 ## Part 1: Developing Data Pipelines
 
-### Part 1 Objective
+### 1.1 Objective
 
 The pipeline is designed to:
 
@@ -17,7 +17,7 @@ The pipeline is designed to:
 - create the Resale Identifier and SHA-256 hash;
 - produce reconciled output datasets.
 
-### Part 1 Processing flow
+### 1.2 Processing flow
 
 ```mermaid
 flowchart TD
@@ -70,7 +70,7 @@ flowchart TD
     class Y review;
 ```
 
-### Part 1 Module structure
+### 1.3 Module structure
 
 ```text
 src/hdb_pipeline/
@@ -83,7 +83,7 @@ src/hdb_pipeline/
 └── pipeline.py         # end-to-end ETL orchestration
 ```
 
-### Part 1 Quick start
+### 1.4 Quick start
 
 #### Option 1: Conda
 
@@ -103,14 +103,14 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### Install Dependencies
+#### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 pip install -e .
 ```
 
-### Run the Pipeline
+#### Run the Pipeline
 
 Run the following command from the project root:
 
@@ -121,13 +121,13 @@ PYTHONPATH=src python -m hdb_pipeline.main \
   --as-of-date 2026-07-18
 ```
 
-### Run the Notebook
+#### Run the Notebook
 
 ```bash
 jupyter notebook notebooks/hdb_resale_pipeline.ipynb
 ```
 
-### Run Tests
+#### Run Tests
 
 ```bash
 PYTHONPATH=src pytest -q
@@ -139,11 +139,7 @@ PYTHONPATH=src pytest -q
 
 ### 2.1. AWS Data Ingestion Architecture
 
-## Part 2: Data Ingestion Architecture & Data Exploitation Architecture
-
-### 2.1 AWS Data Ingestion Architecture
-
-#### 2.1.1 Objective
+#### Objective
 
 The solution ingests batch files from the public `data.gov.sg` endpoint into Amazon S3.
 
@@ -155,11 +151,11 @@ The design supports:
 - secure storage in Amazon S3;
 - automated ETL processing and monitoring.
 
-#### 2.1.2 Processing Flow
+#### Processing Flow
 
-#### 2.1.3 Main Components
+#### Main Components
 
-#### 2.1.4 Network Design
+#### Network Design
 
 ### 2.2 AWS Data Exploitation Architecture
 
