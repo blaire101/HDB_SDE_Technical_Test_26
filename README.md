@@ -139,7 +139,7 @@ PYTHONPATH=src pytest -q
 
 ### 2.1. AWS Data Ingestion Architecture
 
-#### Objective
+#### 2.1.1 Objective
 
 The solution ingests batch files from the public `data.gov.sg` endpoint into Amazon S3.
 
@@ -151,11 +151,11 @@ The design supports:
 - secure storage in Amazon S3;
 - automated ETL processing and monitoring.
 
-#### Processing Flow
+#### 2.1.2 Processing Flow
 
-#### Main Components
+#### 2.1.3 Main Components
 
-#### Network Design
+#### 2.1.4 Network Design
 
 ### 2.2 AWS Data Exploitation Architecture
 
