@@ -153,8 +153,9 @@ The design supports:
 
 #### 2.1.2 Processing Flow
 
-![AWS Data Ingestion Architecture](docs/hdb_aws_data_ingestion_architecture.png)
+![AWS Data Ingestion Architecture](docs/data_ingestion_architecture.png)
 
+**The downloader is a Python application packaged as a Docker container and run on ECS Fargate.**
 
 The workflow is:
 
@@ -199,25 +200,87 @@ Private Subnet
 
 #### 2.2.1 Objective
 
+The solution allows internal users to analyse the processed HDB resale datasets through Tableau and Amazon Athena.
+
+The design supports:
+
+- private access to Tableau;
+- serverless SQL queries with Amazon Athena;
+- metadata management through the AWS Glue Data Catalog;
+- partitioned Parquet data in Amazon S3;
+- controlled query results, encryption and monitoring.
+
 #### 2.2.2 Processing Flow
+
+![AWS Data Exploitation Architecture](docs/hdb_aws_data_exploitation_architecture.png)
+
+The workflow is:
+
+1. Internal users access Tableau through a private connection or VPN.
+2. Tableau runs on Amazon EC2 in a private subnet without a public IP address.
+3. Tableau submits SQL queries to Amazon Athena through the Athena JDBC driver.
+4. The Athena Interface VPC Endpoint provides private access to the Athena API.
+5. Athena reads table and partition metadata from the AWS Glue Data Catalog.
+6. Athena queries the partitioned Parquet datasets in the S3 Processed Zone.
+7. Query results are written to the S3 Athena Query Results bucket.
+8. The Athena Workgroup controls the result location, encryption and query limits.
+9. IAM, KMS and CloudWatch provide access control, encryption and monitoring.
 
 #### 2.2.3 Main Components
 
+| Component | Purpose |
+|---|---|
+| Internal Users | Access Tableau dashboards and analytical reports. |
+| Tableau on Amazon EC2 | Provides dashboards and submits SQL queries to Athena. |
+| Athena JDBC/ODBC Driver | Connects Tableau to Amazon Athena. |
+| Athena Interface VPC Endpoint | Provides private access from the VPC to the Athena API. |
+| Amazon Athena | Runs serverless SQL queries on data stored in Amazon S3. |
+| Athena Workgroup | Controls query settings, result location, encryption and query limits. |
+| AWS Glue Data Catalog | Stores table, schema and partition metadata. |
+| S3 Processed Zone | Stores processed datasets in partitioned Parquet format. |
+| S3 Athena Query Results | Stores output files produced by Athena queries. |
+| S3 Gateway VPC Endpoint | Provides private access from EC2 to the Athena query results in S3. |
+| IAM, KMS and CloudWatch | Provide access control, encryption and monitoring. |
+
 #### 2.2.4 Network Design
+
+Tableau runs on Amazon EC2 in a private subnet and has no public IP address.
+
+Internal users access Tableau through a private connection or VPN:
+
+```text
+Internal Users
+→ Private Access / VPN
+→ Tableau on Amazon EC2
+```
 
 ### 2.3 Security, Scalability, and Performance Assumptions
 
 #### 2.3.1 Security
 
+- Resources in private subnets have no public IP addresses.
+- IAM roles follow the principle of least privilege.
+- S3 buckets block public access and use SSE-KMS encryption.
+- Athena and S3 traffic use VPC endpoints where applicable.
+
 #### 2.3.2 Scalability and Reliability
+
+- ECS Fargate CPU and memory can be adjusted for larger source files.
+- S3 multipart upload supports large-file ingestion and retry of failed parts.
+- Step Functions retries temporary failures and starts Glue only after a successful download.
+- AWS Glue can scale processing capacity based on data volume.
 
 #### 2.3.3 Performance
 
+- Processed datasets are stored in Parquet format.
+- Data is partitioned by suitable fields such as resale year and month.
+- Athena Workgroup settings help control query execution and scanned data.
+- Glue jobs should process only new or changed source files where possible.
+
 #### 2.3.4 General Assumptions
 
-
----
-
-- [Data Ingestion Architecture](docs/disable-v1/data_ingestion_architecture.png)
-- [Data Exploitation Architecture](docs/disable-v1/data_exploitation_architecture.png)
-
+- The AWS Region supports all services used in the architecture.
+- Tableau is installed on an EC2 instance in a private subnet.
+- Internal users access Tableau through an approved private network connection.
+- The Part 1 ETL logic is reimplemented in AWS Glue.
+- Bucket names, IAM policies, KMS keys and endpoint policies are configured during deployment.
