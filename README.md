@@ -153,9 +153,47 @@ The design supports:
 
 #### 2.1.2 Processing Flow
 
+![AWS Data Ingestion Architecture](docs/hdb_aws_data_ingestion_architecture.png)
+
+
+The workflow is:
+
+1. EventBridge Scheduler starts the Step Functions workflow.
+2. Step Functions runs the downloader on ECS Fargate.
+3. The downloader accesses `data.gov.sg` through the NAT Gateway and Internet Gateway.
+4. The file is uploaded to the S3 Raw Zone through the S3 Gateway VPC Endpoint using multipart upload.
+5. After the download succeeds, Step Functions starts AWS Glue.
+6. AWS Glue runs the Part 1 ETL pipeline.
+7. The processed datasets are written to the S3 Processed Zone and registered in the Glue Data Catalog.
+8. CloudWatch records logs and Amazon SNS sends failure notifications.
+
 #### 2.1.3 Main Components
 
+| Component | Purpose |
+|---|---|
+| EventBridge Scheduler | Starts the workflow on a schedule. It is disabled by default. |
+| Step Functions | Orchestrates the Fargate downloader and Glue ETL job. |
+| ECS Fargate | Runs the containerised downloader without managing EC2 servers. |
+| NAT Gateway | Provides outbound internet access from the private subnet. |
+| S3 Gateway VPC Endpoint | Provides private access from the VPC to Amazon S3. |
+| S3 Raw Zone | Stores original files with versioning and SSE-KMS encryption. |
+| AWS Glue ETL | Runs the Part 1 ETL pipeline. |
+| S3 Processed Zone | Stores cleaned, failed, transformed and hashed datasets in Parquet format. |
+| Glue Data Catalog | Stores table and partition metadata. |
+| CloudWatch and SNS | Provide monitoring and failure notification. |
+
 #### 2.1.4 Network Design
+
+The downloader runs in a private subnet without a public IP address.
+
+It accesses `data.gov.sg` through:
+
+```text
+Private Subnet
+→ NAT Gateway
+→ Internet Gateway
+→ data.gov.sg
+```
 
 ### 2.2 AWS Data Exploitation Architecture
 
@@ -180,6 +218,6 @@ The design supports:
 
 ---
 
-- [Data Ingestion Architecture](docs/diagrams/data_ingestion_architecture.png)
-- [Data Exploitation Architecture](docs/diagrams/data_exploitation_architecture.png)
+- [Data Ingestion Architecture](docs/disable-v1/data_ingestion_architecture.png)
+- [Data Exploitation Architecture](docs/disable-v1/data_exploitation_architecture.png)
 
