@@ -153,14 +153,12 @@ The design supports:
 
 #### 2.1.2 Processing Flow
 
-![AWS Data Ingestion Architecture](docs/data_ingestion_architecture.png)
-
-**The downloader is a Python application packaged as a Docker container and run on ECS Fargate.**
+![AWS Data Ingestion Architecture](docs/hdb_aws_data_ingestion_architecture.png)
 
 The workflow is:
 
 1. EventBridge Scheduler starts the Step Functions workflow.
-2. Step Functions runs the downloader on ECS Fargate.
+2. Step Functions runs the downloader(`python application packaged as a Docker container`) on ECS Fargate.
 3. The downloader accesses `data.gov.sg` through the NAT Gateway and Internet Gateway.
 4. The file is uploaded to the S3 Raw Zone through the S3 Gateway VPC Endpoint using multipart upload.
 5. After the download succeeds, Step Functions starts AWS Glue.
