@@ -177,13 +177,13 @@ The workflow is:
 
 | Component | Purpose |
 |---|---|
-| EventBridge Scheduler | Starts the workflow on a schedule. It is disabled by default. |
+| EventBridge Scheduler | Starts the workflow on a schedule. |
 | Step Functions | Orchestrates the Fargate downloader and Glue ETL job. |
 | ECS Fargate | Runs the containerised downloader without managing EC2 servers. |
 | NAT Gateway | Provides outbound internet access from the private subnets. |
 | S3 Gateway VPC Endpoint | Provides private access from the VPC to Amazon S3. |
 | S3 Raw Zone | Stores original files with versioning and SSE-KMS encryption. |
-| AWS Glue ETL | Implements the Part 1 ETL logic at scale. |
+| AWS Glue ETL | Implements the Part 1 ETL logic. |
 | S3 Processed Zone | Stores cleaned, failed, transformed and hashed datasets in Parquet format. |
 | Glue Data Catalog | Stores table and partition metadata. |
 | CloudWatch and SNS | Provide logs, metrics, alarms and failure notifications. |
@@ -249,7 +249,7 @@ The workflow is:
 
 #### 2.2.4 Network Design
 
-Tableau runs on Amazon EC2 in the Private Application Subnets of the Application VPC and has no public IP address.
+Tableau runs on Amazon EC2 in the Private Subnets of the VPC and has no public IP address.
 
 Internal users access Tableau through an approved private connection or VPN:
 
