@@ -224,7 +224,7 @@ The workflow is:
 6. Athena queries the partitioned Parquet datasets in the S3 Processed Zone.
 7. Query results are written to the S3 Athena Query Results bucket.
 8. The Athena Workgroup controls the result location, encryption and query limits.
-9. IAM, KMS and CloudWatch provide access control, encryption and monitoring.
+9. IAM, CloudWatch provide access control and monitoring.
 
 #### 2.2.3 Main Components
 
