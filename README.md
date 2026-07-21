@@ -75,7 +75,7 @@ flowchart TD
     class Y review;
 ```
 
-Review dataset: The Review dataset is a non-exclusive subset of the Cleaned dataset containing records flagged for price review. Anomalous-price flags do not automatically reject otherwise valid records.
+> Review dataset: The Review dataset is a non-exclusive subset of the Cleaned dataset containing records flagged for price review. Anomalous-price flags do not automatically reject otherwise valid records.
 
 ### 1.3 Module structure
 
