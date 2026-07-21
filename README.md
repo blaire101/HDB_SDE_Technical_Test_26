@@ -153,7 +153,7 @@ The design supports:
 
 #### 2.1.2 Processing Flow
 
-![AWS Data Ingestion Architecture](docs/hdb_aws_data_ingestion_architecture.png)
+![AWS Data Ingestion Architecture](docs/aws_data_ingestion_architecture.png)
 
 The workflow is:
 
@@ -210,7 +210,7 @@ The design supports:
 
 #### 2.2.2 Processing Flow
 
-![AWS Data Exploitation Architecture](docs/hdb_aws_data_exploitation_architecture.png)
+![AWS Data Exploitation Architecture](docs/aws_data_exploitation_architecture.png)
 
 The workflow is:
 
