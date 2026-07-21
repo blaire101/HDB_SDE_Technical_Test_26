@@ -10,12 +10,13 @@
 The pipeline is designed to:
 
 - ingest and combine the required HDB resale source files;
+- preserve the contributing source files in the Raw output;
 - validate and standardise the data;
 - recalculate the remaining lease;
 - remove duplicate transactions;
 - flag unusual resale prices;
-- create the Resale Identifier and SHA-256 hash;
-- produce reconciled output datasets.
+- create the Resale Identifier and generate its SHA-256 hash
+- produce cleaned, failed, review, transformed and hashed output datasets.
 
 ### 1.2 Processing flow
 
@@ -23,8 +24,11 @@ The pipeline is designed to:
 flowchart TD
     subgraph P1[1. Ingest and Prepare]
         A[Read Source Files]
+        R[Raw Source Files]
         B[Combine and Filter Records]
         C[Profile Data Quality]
+
+        A --> R
         A --> B --> C
     end
 
@@ -33,6 +37,7 @@ flowchart TD
         E[Recalculate Remaining Lease]
         F[Remove Duplicate Transactions]
         G[Flag Unusual Prices]
+
         D --> E --> F --> G
     end
 
@@ -69,6 +74,8 @@ flowchart TD
     class X1,X2,X failed;
     class Y review;
 ```
+
+Review dataset: The Review dataset is a non-exclusive subset of the Cleaned dataset containing records flagged for price review. Anomalous-price flags do not automatically reject otherwise valid records.
 
 ### 1.3 Module structure
 
@@ -133,7 +140,7 @@ jupyter notebook notebooks/hdb_resale_pipeline.ipynb
 PYTHONPATH=src pytest -q
 ```
 
-## Part 2: Data Ingestion Architecting & Data Exploitation Architecting
+## Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns
 
 **AWS Data Ingestion & Data Exploitation Architecture**
 
@@ -161,10 +168,10 @@ The workflow is:
 2. Step Functions runs the downloader(`python application packaged as a Docker container`) on ECS Fargate.
 3. The downloader accesses `data.gov.sg` through the NAT Gateway and Internet Gateway.
 4. The file is uploaded to the S3 Raw Zone through the S3 Gateway VPC Endpoint using multipart upload.
-5. After the download succeeds, Step Functions starts AWS Glue.
-6. AWS Glue runs the Part 1 ETL pipeline.
+5. After the download and S3 upload succeed, Step Functions starts the AWS Glue ETL job.
+6. AWS Glue implements the Part 1 ETL logic.
 7. The processed datasets are written to the S3 Processed Zone and registered in the Glue Data Catalog.
-8. CloudWatch records logs and Amazon SNS sends failure notifications.
+8. CloudWatch collects logs and metrics, while Amazon SNS sends failure notifications.
 
 #### 2.1.3 Main Components
 
@@ -173,22 +180,22 @@ The workflow is:
 | EventBridge Scheduler | Starts the workflow on a schedule. It is disabled by default. |
 | Step Functions | Orchestrates the Fargate downloader and Glue ETL job. |
 | ECS Fargate | Runs the containerised downloader without managing EC2 servers. |
-| NAT Gateway | Provides outbound internet access from the private subnet. |
+| NAT Gateway | Provides outbound internet access from the private subnets. |
 | S3 Gateway VPC Endpoint | Provides private access from the VPC to Amazon S3. |
 | S3 Raw Zone | Stores original files with versioning and SSE-KMS encryption. |
-| AWS Glue ETL | Runs the Part 1 ETL pipeline. |
+| AWS Glue ETL | Implements the Part 1 ETL logic at scale. |
 | S3 Processed Zone | Stores cleaned, failed, transformed and hashed datasets in Parquet format. |
 | Glue Data Catalog | Stores table and partition metadata. |
-| CloudWatch and SNS | Provide monitoring and failure notification. |
+| CloudWatch and SNS | Provide logs, metrics, alarms and failure notifications. |
 
 #### 2.1.4 Network Design
 
-The downloader runs in a private subnet without a public IP address.
+The downloader runs in a private subnets without a public IP address.
 
 It accesses `data.gov.sg` through:
 
 ```text
-Private Subnet
+Private Application Subnets
 → NAT Gateway
 → Internet Gateway
 → data.gov.sg
@@ -222,7 +229,7 @@ The workflow is:
 6. Athena queries the partitioned Parquet datasets in the S3 Processed Zone.
 7. Query results are written to the S3 Athena Query Results bucket.
 8. The Athena Workgroup controls the result location, encryption and query limits.
-9. IAM, CloudWatch provide access control and monitoring.
+9. IAM provides access control, while CloudWatch provides logging, metrics and monitoring.
 
 #### 2.2.3 Main Components
 
@@ -242,9 +249,9 @@ The workflow is:
 
 #### 2.2.4 Network Design
 
-Tableau runs on Amazon EC2 in a private subnet and has no public IP address.
+Tableau runs on Amazon EC2 in the Private Application Subnets of the Application VPC and has no public IP address.
 
-Internal users access Tableau through a private connection or VPN:
+Internal users access Tableau through an approved private connection or VPN:
 
 ```text
 Internal Users
