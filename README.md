@@ -16,7 +16,7 @@ The pipeline is designed to:
 - remove duplicate transactions;
 - flag unusual resale prices;
 - create the Resale Identifier and generate its SHA-256 hash
-- produce cleaned, failed, review, transformed and hashed output datasets.
+- produce raw, **cleaned, failed**, review, **transformed and hashed** output datasets.
 
 ### 1.2 Processing flow
 
@@ -237,7 +237,7 @@ The workflow is:
 |---|---|
 | Internal Users | Access Tableau dashboards and analytical reports. |
 | Tableau on Amazon EC2 | Provides dashboards and submits SQL queries to Athena. |
-| Athena JDBC/ODBC Driver | Connects Tableau to Amazon Athena. |
+| Athena JDBC Driver | Connects Tableau to Amazon Athena. |
 | Athena Interface VPC Endpoint | Provides private access from the VPC to the Athena API. |
 | Amazon Athena | Runs serverless SQL queries on data stored in Amazon S3. |
 | Athena Workgroup | Controls query settings, result location, encryption and query limits. |
@@ -249,13 +249,13 @@ The workflow is:
 
 #### 2.2.4 Network Design
 
-Tableau runs on Amazon EC2 in the Private Subnets of the VPC and has no public IP address.
+Tableau runs on Amazon EC2 in a Private analytics subnet within the Analytics VPC and has no public IP address.
 
 Internal users access Tableau through an approved private connection or VPN:
 
 ```text
 Internal Users
-→ Private Access / VPN
+→ Corporate Network / VPN
 → Tableau on Amazon EC2
 ```
 
