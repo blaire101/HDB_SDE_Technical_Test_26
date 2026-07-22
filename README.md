@@ -104,14 +104,6 @@ flowchart TD
 ├── tests/
 │   └── test_pipeline.py
 ├── output/
-│   ├── raw/
-│   ├── profiling/
-│   ├── cleaned/
-│   ├── failed/
-│   ├── review/
-│   ├── transformed/
-│   ├── hashed/
-│   └── run_manifest.json
 ├── docs/
 │   ├── aws_data_ingestion_architecture.png
 │   └── aws_data_exploitation_architecture.png
