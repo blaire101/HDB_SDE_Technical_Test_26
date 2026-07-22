@@ -229,7 +229,7 @@ output/
 ├── review/
 ├── transformed/
 ├── hashed/
-└── manifest/
+└── run_manifest.json
 ```
 
 | Output      | Description                                               |
@@ -242,13 +242,7 @@ output/
 | Review      | Cleaned records flagged for price review                  |
 | Transformed | Cleaned data with the Resale Identifier                   |
 | Hashed      | Cleaned data with the SHA-256 identifier                  |
-| Manifest    | Execution metadata, row counts and reconciliation results |
-
-The following reconciliation rule should hold:
-
-```text
-Master Record Count = Cleaned Record Count + Failed Record Count
-```
+| Manifest Json   | Execution metadata, row counts and reconciliation results |
 
 ### 1.6 Environment Setup
 
