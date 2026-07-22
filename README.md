@@ -5,6 +5,23 @@ This repository contains the solution for the HDB SDE Technical Test.
 - **Part 1:** Developing Data Pipelines using Python
 - **Part 2:** Architecting Data Ingestion and Data Exploitation Solution Patterns (on AWS)
 
+## Table of Contents
+
+- [Part 1: Developing Data Pipelines](#part-1-developing-data-pipelines)
+  - [Objective](#11-objective)
+  - [Processing Flow](#12-processing-flow)
+  - [Project Structure](#13-project-structure)
+  - [Data Processing Rules](#14-data-processing-rules)
+  - [Output Datasets](#15-output-datasets)
+  - [Environment Setup](#16-environment-setup)
+  - [Run the Pipeline](#17-run-the-pipeline)
+  - [Run the Notebook](#18-run-the-notebook)
+  - [Run Tests](#19-run-tests)
+- [Part 2: AWS Architecture](#part-2-architecting-data-ingestion--data-exploitation-solution-patterns)
+  - [Data Ingestion Architecture](#21-aws-data-ingestion-architecture)
+  - [Data Exploitation Architecture](#22-aws-data-exploitation-architecture)
+  - [Design Assumptions](#23-design-assumptions-and-considerations)
+
 ## Part 1: Developing Data Pipelines
 
 ### 1.1 Objective
