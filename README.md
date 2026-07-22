@@ -134,8 +134,8 @@ The original contributing CSV files are retained in the Raw output. Source-file 
 
 Data profiling outputs include:
 - null counts and percentages;
-- distinct-value counts;
 - column data types;
+- distinct-value counts;
 - categorical distributions for town, flat type, flat model and storey range.
 
 #### 1.4.2 Validation and Cleaning
