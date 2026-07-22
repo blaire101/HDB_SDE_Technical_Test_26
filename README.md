@@ -23,8 +23,6 @@ It is designed to:
 * generate an irreversible SHA-256 hash of the identifier;
 * produce Raw, **Cleaned, Failed**, Review, **Transformed and Hashed** datasets.
 
-The pipeline is implemented programmatically without manually modifying the source files.
-
 ### 1.2 Processing flow
 
 ```mermaid
