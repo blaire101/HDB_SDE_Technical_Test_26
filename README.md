@@ -440,30 +440,25 @@ Internal Users
 
 #### 2.3.1 General Assumptions
 
-* The ingestion and analytics workloads are deployed in separate VPCs for workload isolation.
-* Both VPCs use private subnets across at least two Availability Zones.
-* The `data.gov.sg` endpoint supports HTTPS downloads.
-* AWS Glue implements the same business rules as the Part 1 Python pipeline.
-* Tableau Server is hosted on Amazon EC2 and accessed through the corporate network or an approved VPN.
-* Detailed IAM policies, bucket names and endpoint policies are outside the scope of this design.
+- The ingestion and analytics workloads are deployed in separate VPCs for isolation.
+- Both VPCs use private subnets across at least two Availability Zones.
+- AWS Glue implements the same business rules as the Part 1 Python ETL pipeline.
+- Detailed IAM policies and resource configurations are outside the scope of this design.
 
 #### 2.3.2 Security
 
-* ECS Fargate and Tableau have no public IP addresses.
-* IAM roles follow the principle of least privilege.
-* S3 buckets block public access and use SSE-KMS encryption.
-* Athena and S3 traffic use VPC endpoints where applicable.
+- ECS Fargate and Tableau have no public IP addresses.
+- IAM roles follow the principle of least privilege.
+- S3 uses blocked public access and SSE-KMS encryption.
+- Athena and S3 are accessed through VPC endpoints where applicable.
 
 #### 2.3.3 Scalability and Reliability
 
-* ECS Fargate resources can be adjusted for larger source files.
-* S3 multipart upload supports large-file transfers and retries of failed parts.
-* Step Functions starts AWS Glue only after the download completes successfully.
-* AWS Glue can scale according to the data volume.
+- ECS Fargate and AWS Glue resources can scale according to file size and data volume.
+- S3 multipart upload supports large files and retries of failed parts.
+- Step Functions starts AWS Glue only after the download succeeds.
 
 #### 2.3.4 Performance
 
-* Processed datasets are stored in partitioned Parquet format.
-* Data is partitioned by suitable fields such as resale year and month.
-* Athena partition pruning reduces the amount of data scanned.
-* Glue jobs should process only new or changed source files where possible.
+- Processed datasets are stored in Parquet format and partitioned by resale year and month.
+- Athena scans only the relevant partitions, improving query performance and reducing cost.
