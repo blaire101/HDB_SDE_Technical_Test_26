@@ -190,7 +190,7 @@ The workflow is:
 
 #### 2.1.4 Network Design
 
-The downloader runs in a private subnets without a public IP address.
+The downloader(`python application packaged as a Docker container`) runs in a private subnets without a public IP address.
 
 It accesses `data.gov.sg` through:
 
