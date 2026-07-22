@@ -1,22 +1,29 @@
 # HDB SDE Technical Test
 
-- Part 1: Developing Data Pipelines （Python ETL pipeline）
-- Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns （AWS）
+This repository contains the solution for the HDB Senior Data Engineer Technical Test.
+
+- **Part 1:** Developing Data Pipelines using Python
+- **Part 2:** Architecting Data Ingestion and Data Exploitation Solution Patterns on AWS
 
 ## Part 1: Developing Data Pipelines
 
-### 1.1 Objective
+## 1.1 Objective
 
-The pipeline is designed to:
+The pipeline processes the HDB resale flat datasets covering January 2012 to December 2016.
 
-- ingest and combine the required HDB resale source files;
-- preserve the contributing source files in the Raw output;
-- validate and standardise the data;
-- recalculate the remaining lease;
-- remove duplicate transactions;
-- flag unusual resale prices;
-- create the Resale Identifier and generate its SHA-256 hash
-- produce raw, **cleaned, failed**, review, **transformed and hashed** output datasets.
+It is designed to:
+
+* ingest and combine the required HDB resale source files;
+* preserve the contributing source files in the Raw output;
+* validate and standardise the data;
+* recalculate the remaining lease;
+* remove duplicate transactions;
+* flag potentially unusual resale prices;
+* create the Resale Identifier;
+* generate an irreversible SHA-256 hash of the identifier;
+* produce Raw, **Cleaned, Failed**, Review, **Transformed and Hashed** datasets.
+
+The pipeline is implemented programmatically without manually modifying the source files.
 
 ### 1.2 Processing flow
 
@@ -75,24 +82,182 @@ flowchart TD
     class Y review;
 ```
 
-> Review dataset: The Review dataset is a non-exclusive subset of the Cleaned dataset containing records flagged for price review. Anomalous-price flags do not automatically reject otherwise valid records.
+> The Review dataset is a non-exclusive subset of the Cleaned dataset. Records with unusual resale prices are retained in the Cleaned dataset because a statistical anomaly is not necessarily an invalid transaction.
 
-### 1.3 Module structure
+## 1.3 Project Structure
+
+```text
+.
+├── data/
+│   └── input/
+│       └── ResaleFlatPrices.zip
+├── notebooks/
+│   └── hdb_resale_pipeline.ipynb
+├── src/
+│   └── hdb_pipeline/
+│       ├── __init__.py
+│       ├── main.py
+│       ├── config.py
+│       ├── ingestion.py
+│       ├── data_quality.py
+│       ├── transformation.py
+│       ├── output.py
+│       └── pipeline.py
+├── tests/
+├── docs/
+│   ├── aws_data_ingestion_architecture.png
+│   └── aws_data_exploitation_architecture.png
+├── requirements.txt
+└── README.md
+```
+
+### Python Module Responsibilities
 
 ```text
 src/hdb_pipeline/
-├── main.py             # command-line entry point
-├── config.py           # pipeline configuration
-├── ingestion.py        # source discovery, extraction and schema union
-├── data_quality.py     # profiling, validation, lease, deduplication and anomaly detection
-├── transformation.py   # Resale Identifier and SHA-256 hashing
-├── output.py           # output datasets and run manifest
-└── pipeline.py         # end-to-end ETL orchestration
+├── main.py             # Command-line entry point
+├── config.py           # Pipeline configuration
+├── ingestion.py        # Source discovery, extraction and schema union
+├── data_quality.py     # Profiling, validation, lease, deduplication and anomaly detection
+├── transformation.py   # Resale Identifier creation and SHA-256 hashing
+├── output.py           # Output datasets and run manifest
+└── pipeline.py         # End-to-end ETL orchestration
 ```
 
-### 1.4 Quick start
+## 1.4 Data Processing Rules
 
-#### Option 1: Conda
+### 1.4.1 Ingestion and Profiling
+
+The pipeline reads the original ZIP file programmatically, discovers the source CSV files and filters records from January 2012 to December 2016.
+
+Source schemas are combined into a single master dataset. Missing columns in older source files are added with null values to preserve a consistent schema.
+
+The original contributing CSV files are retained in the Raw output. Source-file and source-row information is also recorded for traceability.
+
+Data profiling outputs include:
+
+* null counts and percentages;
+* distinct-value counts;
+* column data types;
+* categorical distributions for town, flat type, flat model and storey range.
+
+### 1.4.2 Validation and Cleaning
+
+Validation rules are applied to:
+
+* `month`;
+* `town`;
+* `flat_type`;
+* `flat_model`;
+* `storey_range`;
+* `block`;
+* `street_name`;
+* `floor_area_sqm`;
+* `lease_commence_date`;
+* `resale_price`.
+
+The rules cover date formats, required values, valid category domains, storey-range structure and reasonable numeric values.
+
+### 1.4.3 Remaining Lease
+
+The remaining lease is recalculated using:
+
+* a 99-year lease duration;
+* the lease commencement year;
+* a configurable `as_of_date`.
+
+The result is rounded down and expressed in years and months.
+
+An explicit `as_of_date` is used to make the output reproducible.
+
+### 1.4.4 Duplicate Handling
+
+The composite key consists of all original business columns except `resale_price`.
+
+When duplicate keys have different prices:
+
+* the higher-priced record is retained;
+* the lower-priced record is written to the Failed dataset;
+* the failure reason is recorded as `DUPLICATE_LOWER_PRICE`.
+
+### 1.4.5 Price Anomaly Detection
+
+Potential resale-price anomalies are identified using price per square metre:
+
+```text
+price_per_sqm = resale_price / floor_area_sqm
+```
+
+Records are grouped by resale year, town and flat type. The interquartile range method is then applied:
+
+```text
+Lower Bound = Q1 - 1.5 × IQR
+Upper Bound = Q3 + 1.5 × IQR
+```
+
+Flagged records remain in the Cleaned dataset and are also written to the Review dataset because a statistical anomaly is not necessarily invalid data.
+
+### 1.4.6 Resale Identifier and Hashing
+
+The Resale Identifier follows the required structure:
+
+```text
+S + BBB + AA + MM + T
+```
+
+Where:
+
+* `BBB` is derived from the numeric part of the block;
+* `AA` is derived from the grouped average resale price;
+* `MM` is the resale month;
+* `T` is the first character of the town.
+
+The identifier is hashed using SHA-256 with UTF-8 encoding.
+
+The pipeline verifies that hashing preserves distinct identifier values. The Hashed output contains only the SHA-256 hash.
+
+Since the identifier is based on grouped and shortened attributes, different transactions may share the same identifier.
+
+## 1.5 Output Datasets
+
+The pipeline produces the following outputs:
+
+```text
+output/
+├── raw/
+├── staging/
+├── profiling/
+├── cleaned/
+├── failed/
+├── review/
+├── transformed/
+├── hashed/
+└── manifest/
+```
+
+| Output      | Description                                               |
+| ----------- | --------------------------------------------------------- |
+| Raw         | Original contributing source files                        |
+| Staging     | Combined records within the required date range           |
+| Profiling   | Data-quality profiles and distributions                   |
+| Cleaned     | Valid, deduplicated records                               |
+| Failed      | Invalid and lower-priced duplicate records                |
+| Review      | Cleaned records flagged for price review                  |
+| Transformed | Cleaned data with the Resale Identifier                   |
+| Hashed      | Cleaned data with the SHA-256 identifier                  |
+| Manifest    | Execution metadata, row counts and reconciliation results |
+
+The following reconciliation rule should hold:
+
+```text
+Master Record Count = Cleaned Record Count + Failed Record Count
+```
+
+## 1.6 Environment Setup
+
+Run all commands from the project root directory.
+
+### Conda
 
 The following commands assume that Conda is already installed.
 
@@ -101,25 +266,20 @@ conda create -n g2hdb python=3.10
 conda activate g2hdb
 ```
 
-#### Option 2: Python venv
-
-Use Python's built-in virtual environment if Conda is not available.
+### Python Virtual Environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-#### Install Dependencies
+Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
-pip install -e .
 ```
 
-#### Run the Pipeline
-
-Run the following command from the project root:
+## 1.7 Run the Pipeline
 
 ```bash
 PYTHONPATH=src python -m hdb_pipeline.main \
@@ -128,17 +288,22 @@ PYTHONPATH=src python -m hdb_pipeline.main \
   --as-of-date 2026-07-18
 ```
 
-#### Run the Notebook
+## 1.8 Run the Notebook
 
 ```bash
 jupyter notebook notebooks/hdb_resale_pipeline.ipynb
 ```
 
-#### Run Tests
+The Notebook demonstrates the pipeline execution, profiling results, output validation and reconciliation checks.
+
+
+## 1.9 Run Tests
 
 ```bash
 PYTHONPATH=src pytest -q
 ```
+
+The tests cover the main processing rules.
 
 ## Part 2: Architecting Data Ingestion & Data Exploitation Solution Patterns
 
@@ -259,7 +424,19 @@ Internal Users
 → Tableau on Amazon EC2
 ```
 
-### 2.3 Security, Scalability, and Performance Assumptions
+### 2.3 Architecture Assumptions
+
+- The ingestion and analytics workloads are deployed in separate VPCs for workload isolation.
+- Both VPCs are deployed across at least two Availability Zones.
+- The data.gov.sg endpoint supports HTTPS downloads.
+- ECS Fargate uses multipart upload for large files and does not persist files locally after completion.
+- AWS Glue implements the same business rules as the Part 1 Python pipeline.
+- Processed datasets are stored in partitioned Parquet format.
+- Tableau Server is managed by HDB and accessed only through the corporate network or approved VPN.
+- IAM roles follow least-privilege access.
+- Detailed IAM policies are outside the scope of this architecture exercise.
+
+**Security, Scalability, and Performance Assumptions**
 
 #### 2.3.1 Security
 
