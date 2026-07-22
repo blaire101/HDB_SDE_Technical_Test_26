@@ -419,45 +419,34 @@ Internal Users
 → Tableau on Amazon EC2
 ```
 
-### 2.3 Architecture Assumptions
+### 2.3 Design Assumptions and Considerations
 
-- The ingestion and analytics workloads are deployed in separate VPCs for workload isolation.
-- Both VPCs are deployed across at least two Availability Zones.
-- The data.gov.sg endpoint supports HTTPS downloads.
-- ECS Fargate uses multipart upload for large files and does not persist files locally after completion.
-- AWS Glue implements the same business rules as the Part 1 Python pipeline.
-- Processed datasets are stored in partitioned Parquet format.
-- Tableau Server is managed by HDB and accessed only through the corporate network or approved VPN.
-- IAM roles follow least-privilege access.
-- Detailed IAM policies are outside the scope of this architecture exercise.
+#### 2.3.1 General Assumptions
 
-**Security, Scalability, and Performance Assumptions**
+* The ingestion and analytics workloads are deployed in separate VPCs for workload isolation.
+* Both VPCs use private subnets across at least two Availability Zones.
+* The `data.gov.sg` endpoint supports HTTPS downloads.
+* AWS Glue implements the same business rules as the Part 1 Python pipeline.
+* Tableau Server is hosted on Amazon EC2 and accessed through the corporate network or an approved VPN.
+* Detailed IAM policies, bucket names and endpoint policies are outside the scope of this design.
 
-#### 2.3.1 Security
+#### 2.3.2 Security
 
-- Resources in private subnets have no public IP addresses.
-- IAM roles follow the principle of least privilege.
-- S3 buckets block public access and use SSE-KMS encryption.
-- Athena and S3 traffic use VPC endpoints where applicable.
+* ECS Fargate and Tableau have no public IP addresses.
+* IAM roles follow the principle of least privilege.
+* S3 buckets block public access and use SSE-KMS encryption.
+* Athena and S3 traffic use VPC endpoints where applicable.
 
-#### 2.3.2 Scalability and Reliability
+#### 2.3.3 Scalability and Reliability
 
-- ECS Fargate CPU and memory can be adjusted for larger source files.
-- S3 multipart upload supports large-file ingestion and retry of failed parts.
-- Step Functions retries temporary failures and starts Glue only after a successful download.
-- AWS Glue can scale processing capacity based on data volume.
+* ECS Fargate resources can be adjusted for larger source files.
+* S3 multipart upload supports large-file transfers and retries of failed parts.
+* Step Functions starts AWS Glue only after the download completes successfully.
+* AWS Glue can scale according to the data volume.
 
-#### 2.3.3 Performance
+#### 2.3.4 Performance
 
-- Processed datasets are stored in Parquet format.
-- Data is partitioned by suitable fields such as resale year and month.
-- Athena Workgroup settings help control query execution and scanned data.
-- Glue jobs should process only new or changed source files where possible.
-
-#### 2.3.4 General Assumptions
-
-- The AWS Region supports all services used in the architecture.
-- Tableau is installed on an EC2 instance in a private subnet.
-- Internal users access Tableau through an approved private network connection.
-- The Part 1 ETL logic is reimplemented in AWS Glue.
-- Bucket names, IAM policies, KMS keys and endpoint policies are configured during deployment.
+* Processed datasets are stored in partitioned Parquet format.
+* Data is partitioned by suitable fields such as resale year and month.
+* Athena partition pruning reduces the amount of data scanned.
+* Glue jobs should process only new or changed source files where possible.
