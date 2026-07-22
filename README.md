@@ -7,7 +7,7 @@ This repository contains the solution for the HDB SDE Technical Test.
 
 ## Part 1: Developing Data Pipelines
 
-## 1.1 Objective
+### 1.1 Objective
 
 The pipeline processes the HDB resale flat datasets covering January 2012 to December 2016.
 
@@ -82,7 +82,7 @@ flowchart TD
 
 > The Review dataset is a non-exclusive subset of the Cleaned dataset. Records with unusual resale prices are retained in the Cleaned dataset because a statistical anomaly is not necessarily an invalid transaction.
 
-## 1.3 Project Structure
+### 1.3 Project Structure
 
 ```text
 .
@@ -109,7 +109,7 @@ flowchart TD
 └── README.md
 ```
 
-### Python Module Responsibilities
+#### Python Module Responsibilities
 
 ```text
 src/hdb_pipeline/
@@ -122,9 +122,9 @@ src/hdb_pipeline/
 └── pipeline.py         # End-to-end ETL orchestration
 ```
 
-## 1.4 Data Processing Rules
+### 1.4 Data Processing Rules
 
-### 1.4.1 Ingestion and Profiling
+#### 1.4.1 Ingestion and Profiling
 
 The pipeline reads the original ZIP file programmatically, discovers the source CSV files and filters records from January 2012 to December 2016.
 
@@ -139,7 +139,7 @@ Data profiling outputs include:
 * column data types;
 * categorical distributions for town, flat type, flat model and storey range.
 
-### 1.4.2 Validation and Cleaning
+#### 1.4.2 Validation and Cleaning
 
 Validation rules are applied to:
 
@@ -156,7 +156,7 @@ Validation rules are applied to:
 
 The rules cover date formats, required values, valid category domains, storey-range structure and reasonable numeric values.
 
-### 1.4.3 Remaining Lease
+#### 1.4.3 Remaining Lease
 
 The remaining lease is recalculated using:
 
@@ -168,7 +168,7 @@ The result is rounded down and expressed in years and months.
 
 An explicit `as_of_date` is used to make the output reproducible.
 
-### 1.4.4 Duplicate Handling
+#### 1.4.4 Duplicate Handling
 
 The composite key consists of all original business columns except `resale_price`.
 
@@ -178,7 +178,7 @@ When duplicate keys have different prices:
 * the lower-priced record is written to the Failed dataset;
 * the failure reason is recorded as `DUPLICATE_LOWER_PRICE`.
 
-### 1.4.5 Price Anomaly Detection
+#### 1.4.5 Price Anomaly Detection
 
 Potential resale-price anomalies are identified using price per square metre:
 
@@ -195,7 +195,7 @@ Upper Bound = Q3 + 1.5 × IQR
 
 Flagged records remain in the Cleaned dataset and are also written to the Review dataset because a statistical anomaly is not necessarily invalid data.
 
-### 1.4.6 Resale Identifier and Hashing
+#### 1.4.6 Resale Identifier and Hashing
 
 The Resale Identifier follows the required structure:
 
@@ -216,7 +216,7 @@ The pipeline verifies that hashing preserves distinct identifier values. The Has
 
 Since the identifier is based on grouped and shortened attributes, different transactions may share the same identifier.
 
-## 1.5 Output Datasets
+### 1.5 Output Datasets
 
 The pipeline produces the following outputs:
 
@@ -251,11 +251,11 @@ The following reconciliation rule should hold:
 Master Record Count = Cleaned Record Count + Failed Record Count
 ```
 
-## 1.6 Environment Setup
+### 1.6 Environment Setup
 
 Run all commands from the project root directory.
 
-### Conda
+#### Conda
 
 The following commands assume that Conda is already installed.
 
@@ -264,7 +264,7 @@ conda create -n g2hdb python=3.10
 conda activate g2hdb
 ```
 
-### Python Virtual Environment
+#### Python Virtual Environment
 
 ```bash
 python3 -m venv .venv
@@ -277,7 +277,7 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-## 1.7 Run the Pipeline
+### 1.7 Run the Pipeline
 
 ```bash
 PYTHONPATH=src python -m hdb_pipeline.main \
@@ -286,7 +286,7 @@ PYTHONPATH=src python -m hdb_pipeline.main \
   --as-of-date 2026-07-18
 ```
 
-## 1.8 Run the Notebook
+### 1.8 Run the Notebook
 
 ```bash
 jupyter notebook notebooks/hdb_resale_pipeline.ipynb
@@ -295,7 +295,7 @@ jupyter notebook notebooks/hdb_resale_pipeline.ipynb
 The Notebook demonstrates the pipeline execution, profiling results, output validation and reconciliation checks.
 
 
-## 1.9 Run Tests
+### 1.9 Run Tests
 
 ```bash
 PYTHONPATH=src pytest -q
