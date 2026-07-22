@@ -133,11 +133,10 @@ Source schemas are combined into a single master dataset. Missing columns in old
 The original contributing CSV files are retained in the Raw output. Source-file and source-row information is also recorded for traceability.
 
 Data profiling outputs include:
-
-* null counts and percentages;
-* distinct-value counts;
-* column data types;
-* categorical distributions for town, flat type, flat model and storey range.
+- null counts and percentages;
+- distinct-value counts;
+- column data types;
+- categorical distributions for town, flat type, flat model and storey range.
 
 #### 1.4.2 Validation and Cleaning
 
