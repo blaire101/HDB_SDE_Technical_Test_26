@@ -248,7 +248,9 @@ output/
 
 Run all commands from the project root directory.
 
-#### Conda
+Choose either Conda or Python `venv`.
+
+#### Option 1: Conda
 
 The following commands assume that Conda is already installed.
 
@@ -257,14 +259,14 @@ conda create -n g2hdb python=3.10
 conda activate g2hdb
 ```
 
-#### Python Virtual Environment
+#### Option 2: Python Virtual Environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the dependencies:
+After activating either environment, install the dependencies:
 
 ```bash
 pip install -r requirements.txt
