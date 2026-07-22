@@ -3,7 +3,7 @@
 This repository contains the solution for the HDB Senior Data Engineer Technical Test.
 
 - **Part 1:** Developing Data Pipelines using Python
-- **Part 2:** Architecting Data Ingestion and Data Exploitation Solution Patterns on AWS
+- **Part 2:** Architecting Data Ingestion and Data Exploitation Solution Patterns (on AWS)
 
 ## Part 1: Developing Data Pipelines
 
