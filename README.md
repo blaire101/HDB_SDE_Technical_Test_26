@@ -316,7 +316,7 @@ The tests cover the main processing rules.
 
 **AWS Data Ingestion & Data Exploitation Architecture**
 
-### 2.1. AWS Data Ingestion Architecture
+### 2.1 AWS Data Ingestion Architecture
 
 #### 2.1.1 Objective
 
