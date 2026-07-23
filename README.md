@@ -438,7 +438,6 @@ Internal Users
 - The ingestion and analytics workloads are deployed in separate VPCs for isolation.
 - Both VPCs use private subnets across at least two Availability Zones.
 - AWS Glue implements the same business rules as the Part 1 Python ETL pipeline.
-- Detailed IAM policies and resource configurations are outside the scope of this design.
 
 #### 2.3.2 Security
 
@@ -449,9 +448,9 @@ Internal Users
 
 #### 2.3.3 Scalability and Reliability
 
-- ECS Fargate and AWS Glue resources can scale according to file size and data volume.
+- ECS Fargate and AWS Glue can scale as required.
 - S3 multipart upload supports large files and retries of failed parts.
-- Step Functions starts AWS Glue only after the download succeeds.
+- Step Functions starts AWS Glue only after the Fargate task succeeds.
 
 #### 2.3.4 Performance
 
