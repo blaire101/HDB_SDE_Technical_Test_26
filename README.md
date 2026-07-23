@@ -180,11 +180,9 @@ The remaining lease is recalculated using:
 
 * a 99-year lease duration;
 * the lease commencement year;
-* a configurable `as_of_date`.
+* a configurable `as_of_date`. (it is used to make the output reproducible)
 
 The result is rounded down and expressed in years and months.
-
-An explicit `as_of_date` is used to make the output reproducible.
 
 #### 1.4.4 Duplicate Handling
 
