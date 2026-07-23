@@ -190,9 +190,8 @@ The composite key consists of all original business columns except `resale_price
 
 When duplicate keys have different prices:
 
-* the higher-priced record is retained;
-* the lower-priced record is written to the Failed dataset;
-* the failure reason is recorded as `DUPLICATE_LOWER_PRICE`.
+- the higher-priced record is retained;
+- The lower-priced record is written to the Failed dataset with the failure reason `DUPLICATE_LOWER_PRICE`.
 
 #### 1.4.5 Price Anomaly Detection
 
@@ -226,11 +225,9 @@ Where:
 * `MM` is the resale month;
 * `T` is the first character of the town.
 
-The identifier is hashed using SHA-256 with UTF-8 encoding.
+The identifier is hashed using SHA-256 with UTF-8 encoding, and the Hashed output contains only the hash value.
 
-The pipeline verifies that hashing preserves distinct identifier values. The Hashed output contains only the SHA-256 hash.
-
-Since the identifier is based on grouped and shortened attributes, different transactions may share the same identifier.
+Since the identifier uses grouped and shortened attributes, different transactions may share the same identifier.
 
 ### 1.5 Output Datasets
 
