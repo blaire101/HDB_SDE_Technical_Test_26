@@ -149,7 +149,7 @@ The pipeline reads the original ZIP file programmatically, discovers the source 
 
 Source schemas are combined into a single master dataset. Missing columns in older source files are added with null values to preserve a consistent schema.
 
-The original contributing CSV files are retained in the Raw output. Source-file and source-row information is also recorded for traceability.
+The original contributing CSV files are retained in the Raw output. 
 
 Data profiling outputs include:
 - null counts and percentages;
